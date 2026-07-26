@@ -9,7 +9,7 @@ Features over baseline AWS template:
 * Multi-threading
 * Batch failure handling
 
-This Java template was created as part of an experiment in using Cursor to port a simple .NET project ([https://github.com/adeutscher/RedShirt.Example.SqsLambda](RedShirt.Example.SqsLambda)) into Java. See below for more notes on how well the prompt did as well as adjustments that had to be made and considerations for future development on this Java template.
+This Java template was created as part of an experiment in using Cursor to port a simple .NET project ([RedShirt.Example.SqsLambda](https://github.com/adeutscher/RedShirt.Example.SqsLambda)) into Java. See below for more notes on how well the prompt did as well as adjustments that had to be made and considerations for future development on this Java template.
 
 # Initialisation
 
