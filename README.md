@@ -9,7 +9,7 @@ Features over baseline AWS template:
 * Multi-threading
 * Batch failure handling
 
-This Java template was created as part of an experiment in using Cursor to port a simple .NET project ([https://github.com/adeutscher/RedShirt.Example.SqsLambda](RedShirt.Example.SqsLambda)) into Java. See below for more notes.
+This Java template was created as part of an experiment in using Cursor to port a simple .NET project ([https://github.com/adeutscher/RedShirt.Example.SqsLambda](RedShirt.Example.SqsLambda)) into Java. See below for more notes on how well the prompt did as well as adjustments that had to be made and considerations for future development on this Java template.
 
 # Initialisation
 
@@ -19,7 +19,7 @@ To change the package and Maven artifact names en-masse for your purposes, use t
 bash init-repo.sh com.acme.orders.sqslambda
 ```
 
-This replaces `com.redshirt.example.sqslambda` and `redshirt-example-sqs-lambda` throughout the project (and renames module directories / Java source trees).
+This replaces `foo.bar` and `foo-bar` throughout the project (and renames module directories / Java source trees).
 
 # Local testing
 
@@ -39,6 +39,9 @@ The original prompt made significant progress, but there were several adjustment
 * The testing library Mockito was raising a warning over build settings.
 * The `send-request.py` convenience script for local testing did not catch that the JSON parsing for the Java `MessageHandler` class that `Function.class` inherits from is more case-sensitive than the `DefaultLambdaJsonSerializer` from the .NET version, resulting in null messages.
 * As part of the setup, I opted to go with Google Guice due to a search's recommendation as a lightweight and Lambda-friendly dependency injection framework. That being said, there is currently an issue with JDK 24+ projects and Guice where the injection process will call a deprecated function in. Part of me wonders if this was part of the reason that JDK 21 was initially chosen. The local test of the template code is functional, but a giant warning about a deprecated method call doesn't feel great.
+* The code itself didn't have too many places to go wrong in terms of fundamentals. However there are some considerations:
+  * Some of the code felt a bit weird to me in terms of double-getters, though they were simple getters (e.g. a ternary statement on `getRecords()` with a possible follow-up action to `getRecords()`
+  * The environment-variable-based configuration system seems to parse and test correctly, however the options then seem to have been left behind in dependency injection initialization. There are Java frameworks that are friendlier to this, but the obsensibly more Lambda-friendly systems that I chose do not seem to have a 1-to-1 of .NET's style of using `IOptions<ConfigurationModel>` and its related setup methods. Cursor's failure to account for this is part a guidance issue on my part, as the original .NET Lambda template didn't actually have a need for any explicit `IOptions` use compared to my more complex JobWorker template. It was also a bit ambitious of me to assume that something very Microsoft-y like `IOptions` would have an immediate Java equivalent.
 
 # References
 
